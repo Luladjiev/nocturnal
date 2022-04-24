@@ -11,7 +11,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class ErrorController extends AbstractErrorController {
+class ErrorController extends AbstractErrorController {
 
   public ErrorController(ErrorAttributes errorAttributes) {
     super(errorAttributes);

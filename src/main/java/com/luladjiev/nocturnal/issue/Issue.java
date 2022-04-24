@@ -1,7 +1,9 @@
 package com.luladjiev.nocturnal.issue;
 
 import com.luladjiev.nocturnal.project.Project;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Issue {
+class Issue {
   @Id
   @GeneratedValue(generator = "issue-id-generator")
   @GenericGenerator(

@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/projects")
-public class ProjectsController {
+class ProjectsController {
   private final ProjectsRepository projectsRepository;
 
   public ProjectsController(ProjectsRepository projectsRepository) {

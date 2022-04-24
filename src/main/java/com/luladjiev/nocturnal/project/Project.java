@@ -1,6 +1,5 @@
 package com.luladjiev.nocturnal.project;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
