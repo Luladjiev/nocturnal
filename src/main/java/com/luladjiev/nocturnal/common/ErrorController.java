@@ -1,4 +1,4 @@
-package com.luladjiev.nocturnal.utils;
+package com.luladjiev.nocturnal.common;
 
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
