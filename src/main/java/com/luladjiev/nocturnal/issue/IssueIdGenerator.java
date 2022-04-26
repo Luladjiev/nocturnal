@@ -22,7 +22,7 @@ class IssueIdGenerator implements IdentifierGenerator {
     var id =
         ids.map(o -> o.getId().replace(o.getProject().getId() + "-", ""))
             .mapToLong(Long::parseLong)
-            .max()
+            .findFirst()
             .orElse(0L);
 
     return String.format("%s-%d", issue.getProject().getId(), id + 1);
