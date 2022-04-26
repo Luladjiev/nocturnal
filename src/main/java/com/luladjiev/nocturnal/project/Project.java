@@ -1,5 +1,6 @@
 package com.luladjiev.nocturnal.project;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotBlank;
     indexes = {@Index(name = "id", columnList = "id", unique = true)})
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Project {
   @Id
