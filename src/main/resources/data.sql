@@ -1,6 +1,7 @@
 INSERT INTO PROJECTS(ID, TITLE)
 VALUES ('DNA', 'DynamicAction'),
-       ('EDT', 'EDITED');
+       ('EDT', 'EDITED'),
+       ('ACL', 'Action List');
 
 INSERT INTO ISSUES(ID, DESCRIPTION, TITLE, PROJECT_ID)
 VALUES ('DNA-1', 'Description', 'Issue 1', 'DNA'),
