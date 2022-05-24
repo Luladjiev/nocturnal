@@ -32,5 +32,5 @@ jobs:
         cache: 'npm'
         cache-dependency-path: ./src/main/webui/package-lock.json
     - run: npm ci      
-    - run: npm test
+    - run: npm test -- --no-watch --no-progress
     - run: npm run build
