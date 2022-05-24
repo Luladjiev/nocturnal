@@ -25,4 +25,8 @@ class ProjectsService {
   public List<Project> getProjects() {
     return projectsRepository.findAll(Sort.by(Sort.Direction.ASC, "title"));
   }
+
+  public void deleteProject(String id) {
+    projectsRepository.deleteById(id);
+  }
 }
