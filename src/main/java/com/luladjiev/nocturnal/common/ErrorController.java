@@ -19,18 +19,15 @@ class ErrorController extends AbstractErrorController {
 
   @RequestMapping("/error")
   public ResponseEntity<Object> handleError(HttpServletRequest request) {
-    var path = request
-      .getAttribute(RequestDispatcher.ERROR_REQUEST_URI)
-      .toString();
+    var exception = request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 
-    if (path.startsWith("/api/")) {
+    if (exception != null) {
       return ResponseEntity
-        .status(404)
+        .internalServerError()
         .body(
           new ErrorResponse(
-            "Resource not found",
-            HttpStatus.NOT_FOUND,
-            HttpStatus.NOT_FOUND.value()
+            "Internal server error",
+            HttpStatus.INTERNAL_SERVER_ERROR
           )
         );
     }

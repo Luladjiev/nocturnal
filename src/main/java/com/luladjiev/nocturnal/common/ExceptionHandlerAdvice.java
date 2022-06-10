@@ -13,10 +13,6 @@ public class ExceptionHandlerAdvice {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ResponseBody
   public ErrorResponse handleNotFoundException(NotFoundException ex) {
-    return new ErrorResponse(
-      ex.getMessage(),
-      HttpStatus.NOT_FOUND,
-      HttpStatus.NOT_FOUND.value()
-    );
+    return new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
   }
 }

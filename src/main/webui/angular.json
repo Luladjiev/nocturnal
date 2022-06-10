@@ -75,7 +75,8 @@
               "browserTarget": "Nocturnal:build:production"
             },
             "development": {
-              "browserTarget": "Nocturnal:build:development"
+              "browserTarget": "Nocturnal:build:development",
+              "proxyConfig": "src/proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
