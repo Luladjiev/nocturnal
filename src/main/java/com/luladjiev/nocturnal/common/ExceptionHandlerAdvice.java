@@ -15,4 +15,14 @@ public class ExceptionHandlerAdvice {
   public ErrorResponse handleNotFoundException(NotFoundException ex) {
     return new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
   }
+
+  @ExceptionHandler(RuntimeException.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  @ResponseBody
+  public ErrorResponse handleRuntimeException() {
+    return new ErrorResponse(
+      "Internal server error",
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
 }
