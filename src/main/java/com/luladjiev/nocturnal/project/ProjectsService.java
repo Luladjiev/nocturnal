@@ -1,13 +1,13 @@
 package com.luladjiev.nocturnal.project;
 
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 class ProjectsService {
+
   private final ProjectsRepository projectsRepository;
 
   public ProjectsService(ProjectsRepository projectsRepository) {
@@ -20,6 +20,10 @@ class ProjectsService {
 
   public Optional<Project> getProject(String id) {
     return projectsRepository.findById(id);
+  }
+
+  public Project updateProject(Project project) {
+    return projectsRepository.saveAndFlush(project);
   }
 
   public List<Project> getProjects() {

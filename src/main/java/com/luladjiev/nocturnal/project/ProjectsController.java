@@ -33,6 +33,19 @@ class ProjectsController {
     return projectsService.createProject(project.getTitle(), project.getId());
   }
 
+  @PutMapping("/{id}")
+  public Project updateProject(
+    @PathVariable String id,
+    @RequestBody Project project
+  ) {
+    return projectsService
+      .getProject(id)
+      .map(proj -> projectsService.updateProject(project))
+      .orElseThrow(() ->
+        new NotFoundException(String.format("Project with ID %s not found", id))
+      );
+  }
+
   @DeleteMapping("/{id}")
   public void deleteProject(@PathVariable String id) {
     projectsService.deleteProject(id);
