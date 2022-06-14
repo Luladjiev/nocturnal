@@ -1,5 +1,6 @@
 package com.luladjiev.nocturnal.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,9 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+
+  @Value("${spring.profiles.active:no-profile}")
+  private String springProfile;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity)
@@ -44,12 +48,24 @@ public class WebSecurityConfig {
           .permitAll()
           .logoutSuccessHandler(new SimpleUrlLogoutSuccessHandler())
       )
-      .authorizeHttpRequests(requests ->
-        requests.antMatchers("/api/**").authenticated()
-      )
-      .csrf(csrf ->
-        csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-      );
+      .authorizeHttpRequests(requests -> {
+        var routes = requests.antMatchers("/api/**");
+
+        if (springProfile.equals("disable-web-security")) {
+          routes.permitAll();
+        } else {
+          routes.authenticated();
+        }
+      })
+      .csrf(csrf -> {
+        if (springProfile.equals("disable-web-security")) {
+          csrf.disable();
+        } else {
+          csrf.csrfTokenRepository(
+            CookieCsrfTokenRepository.withHttpOnlyFalse()
+          );
+        }
+      });
 
     return httpSecurity.build();
   }
