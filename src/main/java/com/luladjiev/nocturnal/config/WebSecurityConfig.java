@@ -49,7 +49,7 @@ public class WebSecurityConfig {
           .logoutSuccessHandler(new SimpleUrlLogoutSuccessHandler())
       )
       .authorizeHttpRequests(requests -> {
-        var routes = requests.antMatchers("/api/**");
+        var routes = requests.requestMatchers("/api/**");
 
         if (springProfile.equals("disable-web-security")) {
           routes.permitAll();
@@ -72,7 +72,8 @@ public class WebSecurityConfig {
 
   @Bean
   public InMemoryUserDetailsManager userDetailsManager() {
-    PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    PasswordEncoder encoder =
+      PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     var user = User
       .builder()
