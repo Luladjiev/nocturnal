@@ -1,6 +1,14 @@
 package com.luladjiev.nocturnal.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -13,15 +21,15 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-
-  @Value("${spring.profiles.active:no-profile}")
-  private String springProfile;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity)
@@ -36,36 +44,42 @@ public class WebSecurityConfig {
         login
           .loginPage("/login")
           .loginProcessingUrl("/api/login")
-          .permitAll()
           .failureHandler(new SimpleUrlAuthenticationFailureHandler())
-          .successHandler((request, response, authentication) ->
-            response.setStatus(HttpStatus.NO_CONTENT.value())
-          )
+          .successHandler((request, response, authentication) -> {
+            var csrfToken = (CsrfToken) request.getAttribute(
+              CsrfToken.class.getName()
+            );
+            var cookie = new Cookie("XSRF-TOKEN", csrfToken.getToken());
+            cookie.setPath("/");
+
+            response.addCookie(cookie);
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+          })
       )
       .logout(logout ->
         logout
           .logoutUrl("/api/logout")
-          .permitAll()
-          .logoutSuccessHandler(new SimpleUrlLogoutSuccessHandler())
+          .deleteCookies("JSESSIONID")
+          .logoutSuccessHandler((request, response, authentication) ->
+            response.setStatus(HttpStatus.NO_CONTENT.value())
+          )
       )
-      .authorizeHttpRequests(requests -> {
-        var routes = requests.requestMatchers("/api/**");
-
-        if (springProfile.equals("disable-web-security")) {
-          routes.permitAll();
-        } else {
-          routes.authenticated();
-        }
-      })
+      .authorizeHttpRequests(requests ->
+        requests
+          .requestMatchers("/api/**")
+          .authenticated()
+          .anyRequest()
+          .permitAll()
+      )
       .csrf(csrf -> {
-        if (springProfile.equals("disable-web-security")) {
-          csrf.disable();
-        } else {
-          csrf.csrfTokenRepository(
-            CookieCsrfTokenRepository.withHttpOnlyFalse()
-          );
-        }
-      });
+        var csrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        var requestHandler = new CsrfTokenRequestAttributeHandler();
+
+        csrf
+          .csrfTokenRepository(csrfTokenRepository)
+          .csrfTokenRequestHandler(requestHandler);
+      })
+      .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class);
 
     return httpSecurity.build();
   }
@@ -84,5 +98,28 @@ public class WebSecurityConfig {
       .build();
 
     return new InMemoryUserDetailsManager(user);
+  }
+
+  @Bean
+  public CookieSameSiteSupplier cookieSameSiteSupplier() {
+    return CookieSameSiteSupplier.ofLax();
+  }
+}
+
+final class CsrfCookieFilter extends OncePerRequestFilter {
+
+  private final Logger logger = LoggerFactory.getLogger(CsrfCookieFilter.class);
+
+  @Override
+  protected void doFilterInternal(
+    HttpServletRequest request,
+    HttpServletResponse response,
+    FilterChain filterChain
+  ) throws ServletException, IOException {
+    var csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+    // Render the token value to a cookie by causing the deferred token to be loaded
+    csrfToken.getToken();
+    filterChain.doFilter(request, response);
+    logger.debug("Added CSRF Token");
   }
 }
