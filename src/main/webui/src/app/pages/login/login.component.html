@@ -1,0 +1,44 @@
+<div class="row justify-content-center">
+  <div class="col-6 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+    <form [formGroup]="loginForm" (submit)="login()">
+      <div>
+        <label class="form-label" for="username">Username</label>
+        <input
+          class="form-control"
+          type="text"
+          formControlName="username"
+          id="username"
+          [class.is-invalid]="loginForm.controls.username.invalid"
+          [class.is-valid]="loginForm.controls.username.valid"
+        />
+        <div class="invalid-feedback">Please enter a username.</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="password">Password</label>
+        <input
+          class="form-control"
+          type="password"
+          formControlName="password"
+          id="password"
+          [class.is-invalid]="loginForm.controls.password.invalid"
+          [class.is-valid]="loginForm.controls.password.valid"
+        />
+        <div class="invalid-feedback">Please enter a password.</div>
+      </div>
+
+      <div>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="!loginForm.valid"
+        >
+          Login
+        </button>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger" role="alert">
+        Error when tring to authenticate
+      </div>
+    </form>
+  </div>
+</div>

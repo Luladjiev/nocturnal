@@ -1,5 +1,10 @@
-<p><a href="#" (click)="login()">Login</a></p>
-<p><a href="#" (click)="logout()">Logout</a></p>
-<p>{{user$|async|json}}</p>
+<nav class="navbar bg-dark mb-3" data-bs-theme="dark">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1">Nocturnal</span>
+    <a href (click)="logout($event)">Logout</a>
+  </div>
+</nav>
 
-<router-outlet></router-outlet>
+<div class="container">
+  <router-outlet></router-outlet>
+</div>

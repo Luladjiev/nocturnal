@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AsyncPipe, CommonModule, JsonPipe } from '@angular/common';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -12,24 +12,13 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   imports: [RouterOutlet, AsyncPipe, JsonPipe],
 })
 export class AppComponent {
-  user$ = this.http.get('/api/user');
-
   constructor(private http: HttpClient) {}
-  login() {
-    const headers = new HttpHeaders().set(
-      'Content-Type',
-      'application/x-www-form-urlencoded'
-    );
 
-    const body = new HttpParams()
-      .set('username', 'admin')
-      .set('password', '123');
+  logout(event: Event) {
+    event.preventDefault();
 
-    console.log(body.toString());
-    this.http.post('/api/login', body.toString(), { headers }).subscribe();
-  }
-
-  logout() {
-    this.http.post('/api/logout', null).subscribe();
+    this.http.post('/api/logout', null).subscribe({
+      next: () => location.reload(),
+    });
   }
 }
