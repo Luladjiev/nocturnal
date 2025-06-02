@@ -1,0 +1,6 @@
+@nocturnal_HostAddress = http://localhost:5062
+
+GET {{nocturnal_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
