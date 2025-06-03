@@ -4,4 +4,14 @@
 	let { children } = $props();
 </script>
 
-{@render children()}
+<div>
+	{@render children()}
+</div>
+
+<style>
+	div {
+		max-width: 900px;
+		margin: 0 auto;
+		padding: 20px;
+	}
+</style>
