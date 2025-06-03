@@ -26,6 +26,19 @@ public class ProjectsService(NocturnalDb db)
         return await db.Projects.FindAsync(key) is { } project ? project.ConvertToDto() : null;
     }
 
+    public async Task<bool> Delete(string key)
+    {
+        var project = await db.Projects.FindAsync(key);
+
+        if (project is null)
+            return false;
+
+        db.Projects.Remove(project);
+        await db.SaveChangesAsync();
+
+        return true;
+    }
+
     public async Task<List<ProjectDto>> List()
     {
         return await db.Projects.Select(p => new ProjectDto(
