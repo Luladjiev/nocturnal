@@ -9,7 +9,8 @@ public static class Projects
 {
     public static void MapProjectsRoutes(this RouteGroupBuilder group)
     {
-        group.MapPost("/projects", (CreateProjectDto project, ProjectsService service) => service.Create(project))
+        group.MapPost("/projects",
+                async (CreateProjectDto project, ProjectsService service) => await service.Create(project))
             .AddEndpointFilter<ValidationFilter<CreateProjectDto>>()
             .WithSummary("Create project");
 
