@@ -1,0 +1,40 @@
+﻿<div>
+	<h1>404</h1>
+	<p>Oops! The page you are looking for cannot be found.</p>
+	<a href="/">Go Back to Home</a>
+</div>
+
+<style>
+	div {
+		font-family: Arial, sans-serif;
+		text-align: center;
+		background-color: #f3f3f3;
+		color: #333;
+		margin: 0;
+		height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+
+	h1 {
+		font-size: 5rem;
+		margin: 0;
+	}
+
+	p {
+		font-size: 1.5rem;
+		margin: 10px 0 20px;
+	}
+
+	a {
+		color: #007BFF;
+		text-decoration: none;
+		font-size: 1.2rem;
+	}
+
+	a:hover {
+		text-decoration: underline;
+	}
+</style>
