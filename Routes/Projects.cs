@@ -12,12 +12,17 @@ public static class Projects
         var projects = group.MapGroup("/projects");
 
         projects.MapPost("/",
-                async (CreateProjectDto project, ProjectsService service) => await service.Create(project))
+                async (CreateProjectDto project, ProjectsService service) =>
+                {
+                    var createdProject = await service.Create(project);
+
+                    return TypedResults.Created(nameof(createdProject), createdProject);
+                })
             .AddEndpointFilter<ValidationFilter<CreateProjectDto>>()
             .WithSummary("Create project");
 
         projects.MapGet("/",
-            async Task<Results<Ok<List<ProjectDto>>, ProblemHttpResult>> (ProjectsService service) =>
+            async (ProjectsService service) =>
                 TypedResults.Ok(await service.List())).WithSummary("Get projects");
 
         projects.MapGet("/{key}",
