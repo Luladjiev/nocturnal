@@ -7,8 +7,11 @@
 	const { data } = $props();
 
 	let confirmDeleteKey = $state('');
+	let deletingProjectKey = $state('');
 
 	async function handleDelete(key: string) {
+		deletingProjectKey = key;
+	
 		const response = await fetch(`/api/projects/${key}`, { method: 'DELETE' });
 
 		if (response.ok) {
@@ -29,41 +32,43 @@
 	<div class="table-wrap">
 		<table class="table table-fixed">
 			<thead>
-				<tr>
-					<th class="w-3xs">Name</th>
-					<th>Description</th>
-					<th class="w-24">
-						<ButtonIcon Icon={SquarePlus} variant="green" onclick={handleNew}></ButtonIcon>
-					</th>
-				</tr>
+			<tr>
+				<th class="w-3xs">Name</th>
+				<th>Description</th>
+				<th class="w-24 !text-right">
+					<ButtonIcon Icon={SquarePlus} variant="green" onclick={handleNew}></ButtonIcon>
+				</th>
+			</tr>
 			</thead>
 			<tbody>
-				{#each projects as project (project.key)}
-					<tr>
-						<td>
-							<Link href="/projects/{project.key}">{project.name} ({project.key})</Link>
-						</td>
-						<td class="truncate" title={project.description}>
-							{project.description}
-						</td>
-						<td class="flex gap-1">
-							{#if confirmDeleteKey === project.key}
-								<ButtonIcon Icon={X} variant="red" onclick={cancelDeletion} />
-								<ButtonIcon
-									Icon={Check}
-									variant="green"
-									onclick={() => handleDelete(project.key)}
-								/>
-							{:else}
-								<ButtonIcon
-									Icon={Trash2}
-									variant="red"
-									onclick={() => (confirmDeleteKey = project.key)}
-								/>
-							{/if}
-						</td>
-					</tr>
-				{/each}
+			{#each projects as project (project.key)}
+				<tr>
+					<td>
+						<Link href="/projects/{project.key}">{project.name} ({project.key})</Link>
+					</td>
+					<td class="truncate" title={project.description}>
+						{project.description}
+					</td>
+					<td class="flex gap-1 justify-end">
+						{#if confirmDeleteKey === project.key}
+							<ButtonIcon
+								loading={deletingProjectKey === project.key}
+								Icon={Check}
+								variant="green"
+								onclick={() => handleDelete(project.key)}
+							/>
+							<ButtonIcon Icon={X} variant="red" onclick={cancelDeletion}
+													disabled={deletingProjectKey === project.key} />
+						{:else}
+							<ButtonIcon
+								Icon={Trash2}
+								variant="red"
+								onclick={() => (confirmDeleteKey = project.key)}
+							/>
+						{/if}
+					</td>
+				</tr>
+			{/each}
 			</tbody>
 		</table>
 	</div>
