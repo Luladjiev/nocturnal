@@ -2,16 +2,16 @@
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		href: string;
 		children: Snippet;
+		onclick: () => void;
 	}
 
-	let { href, children }: Props = $props();
+	let { onclick, children }: Props = $props();
 </script>
 
-<a
-	class="anchor"
-	{href}
->
+<button class="btn" {onclick}>
 	{@render children()}
-</a>
+</button>
+
+<style>
+</style>
