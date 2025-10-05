@@ -1,4 +1,6 @@
+using System.Text.Json.Serialization;
 using FluentValidation;
+using nocturnal.Converters;
 using nocturnal.Db;
 using nocturnal.DTO;
 using nocturnal.Extensions;
@@ -10,6 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connection = builder.Configuration.GetConnectionString("NocturnalDb") ?? "Data Source=nocturnal.db";
 builder.Services.AddSqlite<NocturnalDb>(connection);
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+    options.SerializerOptions.Converters.Add(new NumberToStringConverter());
+});
 
 builder.Services.AddNocturnalOpenApi();
 
