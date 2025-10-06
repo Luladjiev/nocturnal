@@ -1,13 +1,18 @@
-﻿<script>
+﻿<script lang="ts">
 	import Link from '$lib/components/Link/Link.svelte';
-	import ErrorView from '$lib/components/ErrorView/ErrorView.svelte';
+	import type { Snippet } from 'svelte';
+
+	interface Props {
+		status: string | number;
+		children: Snippet;
+	}
+
+	let { status = 404, children }: Props = $props();
 </script>
 
-<ErrorView status="404">Oops! The page you are looking for cannot be found.</ErrorView>
-
 <div>
-	<h1>404</h1>
-	<p></p>
+	<h1>{status}</h1>
+	<p>{@render children()}</p>
 	<Link href="/">Go Back to Home</Link>
 </div>
 
